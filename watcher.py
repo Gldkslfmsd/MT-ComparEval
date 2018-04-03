@@ -4,10 +4,10 @@ import sys
 from watcher_metrics import * 
 from utils import escape
 
-con = sqlite3.connect("storage/database")
 
 def log(msg):
-	print(msg)
+#	print(msg, file=sys.stderr)
+	pass
 
 def check_task(task_path):
 	log("checking task %s" % task_path)
@@ -23,6 +23,7 @@ def check_experiment(exp_dirname):
 	at_least_one_task = False
 
 	check_len = [ os.path.join(exp_dirname, "source.txt"), os.path.join(exp_dirname, "reference.txt") ]
+	task_dirs = []
 	for task in files:
 		if task in [ "source.txt", "reference.txt" ]:
 			continue
@@ -30,6 +31,7 @@ def check_experiment(exp_dirname):
 		if os.path.isdir(task_path):
 			try:
 				check_task(task_path)
+				task_dirs.append(task_path)
 				check_len.append(os.path.join(task_path, "translation.txt"))
 			except AssertionError:
 				log("invalid task %s" % task_path)
@@ -53,7 +55,7 @@ def check_experiment(exp_dirname):
 		raise ValueError("no task present")
 
 	log("OK, experiment %s seems to have valid format" % exp_dirname)
-	return tasks[1:]
+	return tasks[1:], task_dirs
 
 def import_experiment(exp_dirname):
 	tasks = check_experiment(exp_dirname)
@@ -129,9 +131,8 @@ def import_task(task_path, exp_id, ref_path):
 	for m in metrics:
 		m = m(con)
 		m.task_metric(task_id, task_path, ref_path)
-		break
 	
-	InsertSentences(con).insert_sentences(task_id, task_path, ref_path)
+#	InsertSentences(con).insert_sentences(task_id, task_path, ref_path)
 
 
 
@@ -139,9 +140,10 @@ def import_task(task_path, exp_id, ref_path):
 
 
 
+if __name__ == "__main__":
 
-
+	con = sqlite3.connect("storage/database")
 #check_experiment(sys.argv[1])
-x = import_experiment(sys.argv[1])
+	x = import_experiment(sys.argv[1])
 
-con.close()
+	con.close()
