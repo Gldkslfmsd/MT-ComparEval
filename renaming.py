@@ -19,20 +19,30 @@ rename_dict = {
 'translate_decs_mult_pos_small':"POSsmall,~vocshr",
 'translate_decs_dheads_and_baseline100k':"adapt~Dheads~on~MT~100k",
 'translate_decs_voc_mult_dheads_part':"Dheads,~voc:MT,~+tags:no,~1:2samp",
-'translate_decs_voc_ner_underline':"NE~voc:MT,~+tags:no",
+'translate_decs_voc_ner_underline':"NE5~voc:MT,~+tags:no",
 'translate_decs_vf_mult_pos_full':"xxxxxxxxPOSfull~vf",
 'translate_decs_mult_dheads_part':"Dheads,~1:2samp",
 'translate_decs_voc_mult_pos_small':"POSsmall,~voc:MT,~+tags:no",
 'translate_decs_voc_mult_repeat':"repeat,~voc:MT,~+tags:no",
 'translate_decs_mult_pos_full':"POSfull,~vocshr",
-'translate_decs_ner_inline':"NE~enrich",
-'translate_decs_ner':"NE,~sampling:no,~gold",
-'translate_decs_ner_underline':"NE",
+'translate_decs_ner_inline':"NE5~enrich",
+'translate_decs_ner':"NE58,~sampling~171:1,~gold",
+'translate_decs_ner_underline':"NE5",
 'translate_decs_baseline_t': "single-task~MT+marker", 
 'translate_decs_mult_dtags500k': "Dtag,~datasize:500k",
 'translate_decs_baseline_t500k': "baseline,~datasize:500k",
 'translate_decs_pos_full_mtvoc': "single-task~POSfull,~voc:MT,~+tags:yes",
 'translate_decs_dtags_mtvoc': "single-task~Dtag,~voc:MT,~+tags:yes",
+'translate_decs_ner_auto': "NE2~auto",
+'translate_decs_ner_gold': "NE2~sampling~171:1,~gold",
+'translate_decs_count_subwords':"count~subwords",
+'translate_decs_dummy_subwords':"enum~subwords",
+'translate_decs_dummy_words':"enum~words",
+
+
+	'decs_dheadsofs_big':"MT+DheadsOffsets",
+	'decs_dtags_big':"MT+Dtags",
+	'decs_upos_big':"MT+UPOS",
 }
 
 def _rename_spaces(k):
@@ -148,6 +158,7 @@ BEST = [
 SMALL = [
 'translate_decs_baseline',
 'translate_decs_mult_dtags500k',
+'translate_decs_baseline500k',
 'translate_decs_baseline_t500k',
 ]
 
@@ -190,12 +201,12 @@ POSsmall = [#'translate_decs_pos_full_mtvoc',
 #NE = list(filter(lambda x:"ne" in x,_rename.keys()))
 #print(NE)
 NE = [ 
-'translate_decs_ner_inline',
-'translate_decs_ner',
-#'translate_decs_voc_ner_underline',
+#'translate_decs_ner_inline',
+#'translate_decs_ner',
+'translate_decs_voc_ner_underline',
 'translate_decs_ner_underline',
-'translate_decs_ner_gold',
-'translate_decs_ner_auto',
+#'translate_decs_ner_gold',
+#'translate_decs_ner_auto',
 ]
 
 
@@ -232,16 +243,38 @@ voc_design_name_runs = [
 	]
 
 
-ADEQ = ['translate_decs_mult_dheads', 
+ADEQ = [
+'translate_decs_dummy_subwords',
+'translate_decs_dummy_words',
+'translate_decs_count_subwords',
+'translate_decs_mult_demo_fbb100', 
+'translate_decs_mult_repeat',
+'translate_decs_baseline_t',
 'translate_decs_ner_underline',
 'translate_decs_mult_pos_full', 
+'translate_decs_mult_pos_small',
+'translate_decs_mult_dheads', 
 'translate_decs_mult_dht',
 'translate_decs_mult_dtags', 
-'translate_decs_mult_repeat',
-'translate_decs_mult_demo_fbb100', 
-'translate_decs_mult_pos_small',
 'translate_decs_baseline',
+#'translate_decs_pos_full_mtvoc',
+#'translate_decs_dtags_mtvoc',
+]
+
+ADEQ_TAG = [
+'translate_decs_dummy_subwords',
+'translate_decs_dummy_words',
+'translate_decs_count_subwords',
+'translate_decs_mult_demo_fbb100', 
+'translate_decs_mult_repeat',
+#'translate_decs_ner_underline',
+'translate_decs_mult_pos_full', 
+'translate_decs_mult_pos_small',
+#'translate_decs_mult_dheads', 
+#'translate_decs_mult_dht',
+'translate_decs_mult_dtags', 
 'translate_decs_baseline_t',
+'translate_decs_baseline',
 #'translate_decs_pos_full_mtvoc',
 #'translate_decs_dtags_mtvoc',
 ]
@@ -273,12 +306,12 @@ SAMPLING = [
 def ne_tasks():
 	d = [
 		('translate_decs_baseline',"baseline"),
-		('translate_decs_baseline_t',"MT,~task~determination"),
-		('translate_decs_ner_inline', "MT,~enrich~source~NE~auto"),
-		('translate_decs_ner',"MT+NE~gold,~171:1~sampling"),
-		('translate_decs_ner_underline',"MT+NE~auto,~1:1~sampling"),
-		("translate_decs_ner_gold","NER2 gold"),
-		("translate_decs_ner_auto","NER2 auto"),
+		('translate_decs_baseline_t',"MT~with~TI~marker"),
+		('translate_decs_ner_inline', "MT,~enrich~source~NE5~auto"),
+		('translate_decs_ner',"MT+NE58~gold,~171:1~sampling"),
+		('translate_decs_ner_underline',"MT+NE5~auto,~1:1~sampling"),
+		("translate_decs_ner_gold","MT+NER2 gold, 171:1 sampling"),
+		("translate_decs_ner_auto","MT+NER2 auto, 1:1 sampling"),
 		]
 	for t,n in d:
 		rename_dict[t] = n
@@ -288,6 +321,7 @@ def ne_tasks():
 ONMT = [
 "translate_decs_baseline",
 "onmtpy_baseline_lenfix",
+"decs_baseline_lenwrong",
 ]
 
 
@@ -295,4 +329,15 @@ VOCDESING_TWICE = [
 "translate_decs_baseline",
 "translate_decs_vocdesign_sourcetwice",
 "translate_decs_vocdesign_targettwice",
+]
+
+CONNL_TAB2 = [
+	"translate_decs_baseline",
+#'translate_decs_mult_repeat',
+#'translate_decs_mult_demo_fbb100',
+'translate_decs_mult_dheads',
+'translate_decs_mult_dtags',
+'translate_decs_mult_dht',
+#'translate_decs_ner_underline',
+#'translate_decs_mult_pos_full',
 ]

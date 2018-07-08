@@ -1,3 +1,29 @@
+# Extensions
+
+This is a fork of the MTComparEval repository. During the work on the
+thesis, it was extended in following ways:
+
+- attempt to rewrite the watcher into Python for higher speed of loading
+  new jobs (finally not finished)
+
+- `metrics_plots.py` and `metrics_table.py` are entry points of the scripts, which
+  were used to render plots and tables into the thesis
+
+- usage: 
+
+	- use python3 environment fulfilling `requirements.txt`
+
+	- use the directories `dev-600k-bigtable` or `onmt-table` as in the
+	  electronical attachments (it has the structure of MTComparEval
+	  experiment, but extended)
+
+	- run e.g. `python3 metrics_plots.py dev-600k-bigtable`, where
+	  dev-600k-bigtable is the directory in electronical attachment
+
+-------------------------------------------------------------------------
+
+
+
 # MT-ComparEval
 MT-ComparEval is a tool for comparison and evaluation of machine translations.
 It allows users to compare translations according to several criteria, such as:
